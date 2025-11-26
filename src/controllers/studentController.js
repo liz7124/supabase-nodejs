@@ -8,7 +8,8 @@ export async function createStudent(req, res) {
     .insert([{ name, major, gpa }])
     .select()
 
-  if (error) return res.status(400).json({ error: error.message })
+  if (error)
+    return res.status(400).json({ error: error.message })
   res.status(201).json(data)
 }
 
@@ -17,8 +18,10 @@ export async function getStudents(req, res) {
   const { data, error } = await supabase
     .from('students')
     .select('*')
+    .order('id', { ascending: true })
 
-  if (error) return res.status(400).json({ error: error.message })
+  if (error)
+    return res.status(400).json({ error: error.message })
   res.json(data)
 }
 
@@ -31,7 +34,8 @@ export async function getStudentById(req, res) {
     .eq('id', id)
     .single()
 
-  if (error) return res.status(404).json({ error: 'Student not found' })
+  if (error)
+    return res.status(404).json({ error: 'Student not found' })
   res.json(data)
 }
 
@@ -46,7 +50,8 @@ export async function updateStudent(req, res) {
     .eq('id', id)
     .select()
 
-  if (error) return res.status(400).json({ error: error.message })
+  if (error)
+    return res.status(400).json({ error: error.message })
   res.json(data)
 }
 
@@ -58,6 +63,7 @@ export async function deleteStudent(req, res) {
     .delete()
     .eq('id', id)
 
-  if (error) return res.status(400).json({ error: error.message })
+  if (error)
+    return res.status(400).json({ error: error.message })
   res.status(204).send()
 }
