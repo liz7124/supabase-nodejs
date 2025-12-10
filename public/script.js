@@ -4,10 +4,80 @@ const form = document.getElementById('studentForm')
 const submitBtn = document.getElementById('submitBtn')
 const idInput = document.getElementById('studentId')
 
+function getToken() {
+  return localStorage.getItem('token')
+}
+
+async function register() {
+  const email = document.getElementById('email').value
+  const password = document.getElementById('password').value
+  const name = document.getElementById('name').value
+
+  const res = await fetch('/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password })
+  })
+
+  const data = await res.json()
+  //console.log(data)
+  if (data.error)
+    return alert(data.error)
+
+  // redirect to verify page
+  window.location = "verify.html"
+}
+
+async function login() {
+
+  const res = await fetch('/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: document.getElementById('email').value,
+      password: document.getElementById('password').value
+    })
+  })
+  console.log(res)
+  const data = await res.json()
+  //console.log(data)
+  if (data.error)
+    return alert(data.error)
+
+  //browser-side storage
+  localStorage.setItem('token', data.access_token)
+  localStorage.setItem('refresh', data.refresh_token)
+
+  window.location = 'index.html'
+}
+
+async function loadUser() {
+  const token = getToken()
+  if (!token)
+    return (location = 'login.html')
+
+  const res = await fetch('/auth/me', {
+    headers: { Authorization: 'Bearer ' + token }
+  })
+
+  const data = await res.json()
+  if (data.error)
+    return (location = 'login.html')
+
+  document.getElementById('user').innerText = 'Logged in as: ' + data.user.email
+}
+
+function logout() {
+  localStorage.clear()
+  location = 'login.html'
+}
+
 //Ambil semua data mahasiswa
 async function fetchStudents() {
     try{
-        const res = await fetch(API_URL)
+        const res = await fetch(API_URL, {
+          headers: { Authorization: 'Bearer ' + getToken() }
+        })
         const students = await res.json()
         renderTable(students)
     } catch (error) {
@@ -47,7 +117,9 @@ form.addEventListener('submit', async (e) => {
   if (id) {
     const res = await fetch(`${API_URL}/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + getToken()
+       },
       body: JSON.stringify({ name, major, gpa })
     })
 
@@ -63,7 +135,9 @@ form.addEventListener('submit', async (e) => {
     //insert
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + getToken()
+       },
       body: JSON.stringify({ name, major, gpa })
     })
 
@@ -100,7 +174,10 @@ function resetForm() {
 //delete
 window.deleteStudent = async (id) => {
     if (confirm('Delete this student?')) {
-        const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+        const res = await fetch(`${API_URL}/${id}`, { 
+          method: 'DELETE',
+          headers: { Authorization: 'Bearer ' + getToken() } 
+        })
         if (res.ok)
             fetchStudents()
     }

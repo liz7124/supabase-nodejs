@@ -6,9 +6,15 @@
   <title>Supabase Students</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 min-h-screen p-8">
+<body onload="loadUser()" class="bg-gray-100 min-h-screen p-8">
   <div class="max-w-2xl mx-auto bg-white shadow-md rounded-xl p-6">
-    <h1 class="text-2xl font-bold mb-4 text-center">Student Management</h1>
+    <div class="flex items-center justify-between mb-4">
+      <h1 class="text-2xl font-bold">Student Management</h1>
+      <div class="flex items-center space-x-3">
+        <span id="user" class="text-sm text-gray-700"></span>
+        <button onclick="logout()" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">Logout</button>
+      </div>
+    </div>
 
     <!-- Form -->
     <form id="studentForm" class="mb-6">
