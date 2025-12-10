@@ -4,6 +4,7 @@ import studentRoutes from './src/routes/studentRoutes.js'
 import { supabase } from './src/db.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import authRoutes from './src/routes/authRoutes.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -20,6 +21,8 @@ app.use('/api/students', studentRoutes)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
+
+app.use('/auth', authRoutes)
 
 const clients = []
 
