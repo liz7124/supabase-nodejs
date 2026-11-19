@@ -1,0 +1,39 @@
+### Practice Routing - uji REST API /api/students
+### Jalankan dulu server: node server.js
+@baseUrl = http://localhost:3000
+@id = 1
+
+### Cek server hidup
+GET {{baseUrl}}/
+
+### CREATE — tambah mahasiswa
+POST {{baseUrl}}/api/students
+Content-Type: application/json
+
+{
+  "name": "Budi Santoso",
+  "major": "Informatika",
+  "gpa": 3.75
+}
+
+### READ ALL — semua mahasiswa
+GET {{baseUrl}}/api/students
+
+### READ ONE — mahasiswa berdasarkan id
+GET {{baseUrl}}/api/students/{{id}}
+
+### UPDATE — ubah data mahasiswa
+PUT {{baseUrl}}/api/students/{{id}}
+Content-Type: application/json
+
+{
+  "name": "Budi Santoso",
+  "major": "Sistem Informasi",
+  "gpa": 3.80
+}
+
+### DELETE — hapus mahasiswa
+DELETE {{baseUrl}}/api/students/{{id}}
+
+### Uji error — id yang tidak ada (harus 404)
+GET {{baseUrl}}/api/students/999999
